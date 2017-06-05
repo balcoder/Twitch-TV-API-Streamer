@@ -3,22 +3,22 @@
 // Main SCSS file
 //
 // load config
-@import 'config/config'; // load mixins
-@import 'mixins/mixins_general';
-@import 'mixins/mixins_breakpoints';
-@import 'mixins/mixins_grids'; // load base
-//@import 'base/reset';
-@import 'base/helper_classes'; //@import 'base/typography';
-// load structure
-@import 'structure/header';
-@import 'structure/sections';
-@import 'structure/footer'; // load modules
-@import 'modules/grids'; // load pages
-@import 'pages/welcome';
-@import 'pages/services';
-@import 'pages/portfolio';
-@import 'pages/blog';
-@import 'pages/contact';
+// @import 'config/config'; // load mixins
+// @import 'mixins/mixins_general';
+// @import 'mixins/mixins_breakpoints';
+// @import 'mixins/mixins_grids'; // load base
+// //@import 'base/reset';
+// @import 'base/helper_classes'; //@import 'base/typography';
+// // load structure
+// @import 'structure/header';
+// @import 'structure/sections';
+// @import 'structure/footer'; // load modules
+// @import 'modules/grids'; // load pages
+// @import 'pages/welcome';
+// @import 'pages/services';
+// @import 'pages/portfolio';
+// @import 'pages/blog';
+// @import 'pages/contact';
 
 .header {
   background-color: #4b367c;
@@ -27,6 +27,7 @@
 }
 /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
 .row.content {
+
   height: 800px;
 }
 .row.title {
@@ -36,10 +37,12 @@
 }
 
 .sidebar {
+
   padding-top: 100px;
+  padding-bottom: 100%;
   background-color: #2C2541;
   color: #898395;
-  height: 100%;
+  //height: 100%;
 }
 /* Set black background color, white text and some padding */
 footer {

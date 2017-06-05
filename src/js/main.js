@@ -1,85 +1,79 @@
-// // Ajax request supporting IE9+
-// var request = new XMLHttpRequest();
-// request.open('GET', '/my/url', true);
-//
-// request.onload = function() {
-//   if (request.status >= 200 && request.status < 400) {
-//     // Success!
-//     var data = JSON.parse(request.responseText);
-//   } else {
-//     // We reached our target server, but it returned an error
-//
-//   }
-// };
-//
-// request.onerror = function() {
-//   // There was a connection error of some sort
-// };
-//
-// request.send();
 document.addEventListener('DOMContentLoaded', function() {
-  var twitchChannel = ["ESL_SC2", "OgamingSC2", "amazhs", "freecodecamp", "imaqtpie", "habathcx", "RobotCaleb", "noobs2ninjas"];
-  function getTwitchStreams(channelArray){
-    for (var channel in channelArray) {
-      if (channelArray.hasOwnProperty(channel)) {
-        myRequest(channelArray[channel])
-      }
-    }
+//["ESL_SC2", "OgamingSC2", "amazhs", "freecodecamp", "imaqtpie", "habathcx", "RobotCaleb", "noobs2ninjas"];
+go();
+function go(){
 
+  var twitchChannel = ["ESL_SC2", "OgamingSC2", "amazhs", "freecodecamp", "imaqtpie", "habathcx", "RobotCaleb", "noobs2ninjas"];
+  var arrayLength = twitchChannel.length;
+  var clientId = "o22x09fbpjvt4nvw2p35gifaxpvj8o";
+  for(var i = 0; i < arrayLength; i++ ){
+    var url = "https://api.twitch.tv/kraken/streams/" + twitchChannel[i] + "?client_id=" + clientId;
+    getJson(url, twitchChannel[i]);
   }
 
-  getTwitchStreams(twitchChannel);
-
-  // Get Twitch.tv status by using an AJAX request
-  function myRequest(channel) {
-    var clientId = "o22x09fbpjvt4nvw2p35gifaxpvj8o";
+  // gets the JSON file using Ajax
+  function getJson(url,channelName) {
+    //var clientId = "o22x09fbpjvt4nvw2p35gifaxpvj8o";
     var xmlhttpip = new XMLHttpRequest();
     xmlhttpip.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
-        myObj = JSON.parse(this.responseText);
+        var myObj = JSON.parse(this.responseText);
         if (myObj.stream === null) {
-          document.getElementById("stream_type").innerHTML = "OffLine";
-          document.getElementById("link").innerHTML = '<a href=' + myObj._links.channel + "?client_id=" + clientId+ ' ' + 'target="_blank">' + myObj._links.channel + '</a>';
+          var divContentNo = [
+            ['stream_type', 'OffLine'],
+            ['link', '<a href=' + myObj._links.channel + "?client_id=" + clientId + ' ' + 'target="_blank">' + myObj._links.channel + '</a>']
+          ];
+          //console.log(myObj._links.channel);
+          writeDivOff(channelName,divContentNo);
         } else {
-          // document.getElementById("game").innerHTML = myObj.stream.game;
-          // document.getElementById("stream_type").innerHTML = myObj.stream.stream_type;
-          // document.getElementById("preview").innerHTML = "<img src=" + myObj.stream.preview.medium + ">";
-          // document.getElementById("link").innerHTML = '<a href=' + myObj.stream.channel.url + ' ' + 'target="_blank">' + myObj.stream.channel.url + '</a>';
-          document.getElementById("stream").innerHTML = '<div id="game">' + myObj.stream.game +
-             '</div><div id="stream_type">' + myObj.stream.stream_type + ' </div><div id="preview"><img src=' + myObj.stream.preview.medium  +
-             '</div><div id="link"><a href=' + myObj.stream.channel.url + ' ' + 'target="_blank">' + myObj.stream.channel.url +'</a></div>'
+          var divContentYes = [
+            ['game','<h1>' + myObj.stream.game + '</h1' ],
+            ['stream_type', 'OnLine'],
+            ['preview','<div id="preview"><img src=' + myObj.stream.preview.medium + '</div>'],
+            ['link', '<a href=' + myObj._links.channel + "?client_id=" + clientId + ' ' + 'target="_blank">' + myObj._links.channel + '</a>']
+          ];
+          writeDivOn(channelName,divContentYes);
         }
       }
     };
-    xmlhttpip.open("GET", "https://api.twitch.tv/kraken/streams/" + channel + "?client_id=" + clientId, true)
+    xmlhttpip.open("GET", url, true)
     xmlhttpip.send();
   }
 
+  //if stream offline write Divs to page
+  function writeDivOff(channelName, divContentNo) {
+    var l = divContentNo.length;
+    for (var i = 0; i < l; i++) {
+      var nameAppend = channelName + "_" + divContentNo[i][0];
+      var div = document.createElement("div");
+      div.setAttribute("id", nameAppend);
+      var element = document.getElementById("stream");
+      element.appendChild(div);
+      document.getElementById(nameAppend).innerHTML = divContentNo[i][1];
+    }
+  }
+  // document.getElementById("stream").innerHTML = '<div id="game">' + myObj.stream.game +
+  //   '</div><div id="stream_type">' + myObj.stream.stream_type + ' </div><div id="preview"><img src=' + myObj.stream.preview.medium +
+  //   '</div><div id="link"><a href=' + myObj.stream.channel.url + ' ' + 'target="_blank">' + myObj.stream.channel.url + '</a></div>'
 
+    // var divContentYes = [
+    //   ['game','<h1>' + myObj.stream.game + '</h1' ]
+    //   ['stream_type', 'OnLine'],
+    //   ['link', '<a href=' + myObj._links.channel + "?client_id=" + clientId + ' ' + 'target="_blank">' + myObj._links.channel + '</a>']
+    // ];
+  //if stream online write Divs to page
+  function writeDivOn(channelName, divContentYes) {
+    var l = divContentYes.length;
+    for (var i = 0; i < l; i++) {
+      var nameAppend = channelName + "_" + divContentYes[i][0];
+      var div = document.createElement("div");
+      div.setAttribute("id", nameAppend);
+      var element = document.getElementById("stream");
+      element.appendChild(div);
+      document.getElementById(nameAppend).innerHTML = divContentYes[i][1];
+    }
+  }
 
+}
 
-
-
-  // myRequest("freecodecamp")
-  // // Get Twitch.tv status by using an AJAX request
-  // function myRequest(channel) {
-  //   var clientId = "o22x09fbpjvt4nvw2p35gifaxpvj8o";
-  //   var xmlhttpip = new XMLHttpRequest();
-  //   xmlhttpip.onreadystatechange = function() {
-  //     if (this.readyState == 4 && this.status == 200) {
-  //       myObj = JSON.parse(this.responseText);
-  //       if (myObj.stream === null) {
-  //         document.getElementById("stream_type").innerHTML = "OffLine";
-  //         document.getElementById("link").innerHTML = '<a href=' + myObj._links.channel + "?client_id=" + clientId+ ' ' + 'target="_blank">' + myObj._links.channel + '</a>';
-  //       } else {
-  //         document.getElementById("game").innerHTML = myObj.stream.game;
-  //         document.getElementById("stream_type").innerHTML = myObj.stream.stream_type;
-  //         document.getElementById("preview").innerHTML = "<img src=" + myObj.stream.preview.medium + ">";
-  //         document.getElementById("link").innerHTML = '<a href=' + myObj.stream.channel.url + ' ' + 'target="_blank">' + myObj.stream.channel.url + '</a>';
-  //       }
-  //     }
-  //   };
-  //   xmlhttpip.open("GET", "https://api.twitch.tv/kraken/streams/" + channel + "?client_id=" + clientId, true)
-  //   xmlhttpip.send();
-  // }
 })
